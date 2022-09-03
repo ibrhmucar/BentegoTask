@@ -68,7 +68,7 @@ public class HomePageTest extends TestBase {
 
         /** Sayfa 2 seçilir, gidilir ve kontrol edilir */
 
-        Utils.scrollToElement(accountPage.pageNumber);
+      //  Utils.scrollToElement(accountPage.pageNumber);
         Utils.clickWithJS(accountPage.pageNumber);
         Utils.waitFor(5);
 
@@ -80,23 +80,27 @@ public class HomePageTest extends TestBase {
 
         /** Ürün sepete eklenir */
 
-        String expectedUrun = Driver.get().findElement(By.xpath("(//h3[@class='productName'])[3]")).getText();
-        Utils.clickWithJS(accountPage.clickTheItem);
+        int rastGeleSayi =Utils.randomNumber();
+        System.out.println(rastGeleSayi);
+        Utils.waitFor(1);
+        String expectedUrun = Driver.get().findElement(By.xpath("(//h3[@class='productName'])["+rastGeleSayi+"]")).getText();
+        WebElement urun = Driver.get().findElement(By.xpath("(//h3[@class='productName'])["+rastGeleSayi+"]"));
+        Utils.clickWithJS(urun);
         Utils.waitFor(2);
         WebElement sepeteEkle = Driver.get().findElement(By.xpath("//button[@type='submit']"));
+        Utils.waitFor(1);
         sepeteEkle.click();
         Utils.waitFor(2);
         String warningTextExpected = "Ürün sepetinize eklendi";
         String warningTextAcutal = Driver.get().findElement(By.xpath("//div[@class='text']")).getText();
         Assert.assertTrue(warningTextAcutal.contains(warningTextExpected));
-        System.out.println(warningTextAcutal);
-        extentLogger.pass("Ürün sepete başarı ile eklendi.");
+        extentLogger.pass(rastGeleSayi+"'inci Ürün sepete başarı ile eklendi.");
 
 
         /** Sepetim sayfasına gidilir ve ürünün sepete eklendiği kontrol edilir*/
 
 
-        Utils.waitFor(1);
+        Utils.waitFor(2);
         WebElement sepetim = Driver.get().findElement(By.xpath("(//a[@href='//www.n11.com/sepetim'])[1]"));
         sepetim.click();
         Utils.waitFor(2);

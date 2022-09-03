@@ -13,6 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
+import static afu.org.checkerframework.checker.units.UnitsTools.min;
+
 
 
 public class Utils {
@@ -147,6 +151,13 @@ public class Utils {
         TakesScreenshot takesScreenshot = (TakesScreenshot) Driver.get();
         String basecode64 = takesScreenshot.getScreenshotAs(OutputType.BASE64);
         return basecode64;
+    }
+
+    public static int randomNumber(){
+        Random number = new Random();
+        int max = 15;
+        int randomNum = number.nextInt((max - min) + 1) + min;
+        return randomNum;
     }
 
 }
