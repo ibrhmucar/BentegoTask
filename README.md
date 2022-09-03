@@ -41,7 +41,7 @@
 # <h2 align="center"> UI Testi İçin
 
 * Test klasörü altında bulunan HomePageTest dosyası içerisinde bulunan "HomePageTest" veya "Task" metotları çalıştırılır.
-* Test sonunda report.html dosyasından test sonuçlarına ulaşılabilir. 
+* Test sonunda report.html dosyasından test sonuçlarına ulaşılabilir. (Lütfen Chrome Tarayıcısıyla açınız.)
 
 
 
