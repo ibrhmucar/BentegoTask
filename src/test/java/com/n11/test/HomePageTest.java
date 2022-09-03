@@ -40,10 +40,12 @@ public class HomePageTest extends TestBase {
         loginPage.login(username, password);
         extentLogger.pass("Başarı ile giriş yapıldı.");
 
+        //Hesabım sayfasının açıldığı kontrol edilir.
         Utils.navigateToHesabim();
         Utils.verification("https://www.n11.com/hesabim/siparislerim");
         Utils.waitFor(1);
 
+        //Kullanıcı adı ile doğrulama yapılır.
         String userNameActual = Driver.get().findElement(By.xpath(loginPage.accountName)).getText();
         System.out.println(userNameActual);
         String expectedName = "Bentego Task";
@@ -52,7 +54,7 @@ public class HomePageTest extends TestBase {
         extentLogger.pass("Kullanıcı adı doğrulandı.");
 
 
-        /** phone kelimesi aratılır ve aratıldığı kontrol edilir */
+        /** telefon kelimesi aratılır ve aratıldığı kontrol edilir */
 
         accountPage.searchbar.click();
         accountPage.searchbar.sendKeys("telefon");
@@ -64,7 +66,7 @@ public class HomePageTest extends TestBase {
         extentLogger.pass("Telefon kelimesi başarı ile aratıldı.");
 
 
-        /** Sayfa 2 seçilir ve gidilir ve kontrol edilir */
+        /** Sayfa 2 seçilir, gidilir ve kontrol edilir */
 
         Utils.scrollToElement(accountPage.pageNumber);
         Utils.clickWithJS(accountPage.pageNumber);

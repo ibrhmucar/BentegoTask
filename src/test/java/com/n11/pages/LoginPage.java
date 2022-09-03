@@ -25,6 +25,7 @@ public class LoginPage extends BasePage {
 
     @FindBy(xpath = "//a[@title='Hesabım']")
     public WebElement hesabimButton;
+
     public String accountName =  "//h1[@class='my_account__menu__profile__full_name']";
 
 

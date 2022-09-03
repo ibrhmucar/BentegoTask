@@ -148,4 +148,5 @@ public class Utils {
         String basecode64 = takesScreenshot.getScreenshotAs(OutputType.BASE64);
         return basecode64;
     }
+
 }
