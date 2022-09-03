@@ -1,5 +1,6 @@
 package com.n11.test;
 
+
 import com.n11.pages.AccountPage;
 import com.n11.pages.ListPage;
 import com.n11.pages.LoginPage;
@@ -9,6 +10,7 @@ import com.n11.utilities.Driver;
 import com.n11.utilities.Utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.SourceType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,37 +30,39 @@ public class HomePageTest extends TestBase {
 
     /** www.n11.com sitesine gidilir ve sayfanın açıldığı kontrol edilir */
 
-    public void microGrupTest() throws Exception {
-
-        String anasayfa = Utils.captureScreenShot();
-        Utils.verification("https://www.n11.com/");
-        report.createTest("Anasayfa Giriş").pass("Ana sayfa başarı ile açıldı.").addScreenCaptureFromBase64String(anasayfa);
+    public void bentegoTask() throws Exception {
 
 
-
-        /** Siteye login olunur ve kontrol edilir */
+        /** Siteye login olunur ve kullanıcı ismi kontrol edilir */
 
         String username = ConfigurationReader.get("username");
         String password = ConfigurationReader.get("password");
         loginPage.login(username, password);
+        extentLogger.pass("Başarı ile giriş yapıldı.");
+
         Utils.navigateToHesabim();
         Utils.verification("https://www.n11.com/hesabim/siparislerim");
+        Utils.waitFor(1);
 
-        String login = Utils.captureScreenShot();
-        report.createTest("Login").pass("Başarı şekilde login olundu.").addScreenCaptureFromBase64String(login);
+        String userNameActual = Driver.get().findElement(By.xpath(loginPage.accountName)).getText();
+        System.out.println(userNameActual);
+        String expectedName = "Bentego Task";
+        Assert.assertTrue(expectedName.equals(userNameActual));
+        System.out.println("Kullanıcı adı " + expectedName + " olarak doğrulandı.");
+        extentLogger.pass("Kullanıcı adı doğrulandı.");
 
 
-        /** IPhone kelimesi aratılır ve aratıldığı kontrol edilir */
+        /** phone kelimesi aratılır ve aratıldığı kontrol edilir */
 
         accountPage.searchbar.click();
-        accountPage.searchbar.sendKeys("Iphone");
+        accountPage.searchbar.sendKeys("telefon");
         accountPage.searchbar.sendKeys(Keys.ENTER);
         Utils.waitFor(2);
         String searchWords = Driver.get().findElement(By.xpath("//*[@class=\"resultText \"]/h1")).getAttribute("innerHTML");
-        Assert.assertTrue(searchWords.contains("Iphone"));
+        Assert.assertTrue(searchWords.contains("telefon"));
+        System.out.println("Telefon kelimesi aratıldı.");
+        extentLogger.pass("Telefon kelimesi başarı ile aratıldı.");
 
-        String iphone = Utils.captureScreenShot();
-        report.createTest("IPhone Kelimesinin Aratılması").pass("IPhone kelimesi başarı şekilde aratıldı.").addScreenCaptureFromBase64String(iphone);
 
         /** Sayfa 2 seçilir ve gidilir ve kontrol edilir */
 
@@ -67,66 +71,66 @@ public class HomePageTest extends TestBase {
         Utils.waitFor(5);
 
         String pageNumber = Driver.get().findElement(By.cssSelector(".active")).getAttribute("data-page");
-        System.out.println(pageNumber);
         Assert.assertTrue(pageNumber.contains("2"));
+        System.out.println("Sayfanın " + pageNumber+ "'icni sayfa olduğu doğrulandı.");
+        extentLogger.pass("Sayfanın 2'inci sayfa olduğu doğrulandı.");
 
-        String yeniSayfa = Utils.captureScreenShot();
-        report.createTest("2'inci Sayfanın Seçilmesi").pass("2'inci sayfa başarı ile açıldı.").addScreenCaptureFromBase64String(yeniSayfa);
+
+        /** Ürün sepete eklenir */
+
+        String expectedUrun = Driver.get().findElement(By.xpath("(//h3[@class='productName'])[3]")).getText();
+        Utils.clickWithJS(accountPage.clickTheItem);
+        Utils.waitFor(2);
+        WebElement sepeteEkle = Driver.get().findElement(By.xpath("//button[@type='submit']"));
+        sepeteEkle.click();
+        Utils.waitFor(2);
+        String warningTextExpected = "Ürün sepetinize eklendi";
+        String warningTextAcutal = Driver.get().findElement(By.xpath("//div[@class='text']")).getText();
+        Assert.assertTrue(warningTextAcutal.contains(warningTextExpected));
+        System.out.println(warningTextAcutal);
+        extentLogger.pass("Ürün sepete başarı ile eklendi.");
 
 
-        /** 3'üncü ürün favori listesine eklenir */
-
-        accountPage.addFav3.click();
-
-        String fav = Utils.captureScreenShot();
-        report.createTest("Ürünün Favorilere Eklenmesi").pass("3'üncü ürün başarı ile favorilere eklendi").addScreenCaptureFromBase64String(fav);
-
-        /** Favori ürünlerinin eklendiği sayfaya gidilir ve kontrol edilir*/
+        /** Sepetim sayfasına gidilir ve ürünün sepete eklendiği kontrol edilir*/
 
 
         Utils.waitFor(1);
-        WebElement hesabim = Driver.get().findElement(By.xpath("//a[@title='Hesabım']"));
-        WebElement favPage = Driver.get().findElement(By.xpath("//a[@title='Favorilerim / Listelerim']"));
-        Utils.hover(hesabim);
-        Utils.hover(favPage);
-        Utils.clickWithJS(favPage);
+        WebElement sepetim = Driver.get().findElement(By.xpath("(//a[@href='//www.n11.com/sepetim'])[1]"));
+        sepetim.click();
+        Utils.waitFor(2);
+        String sepetimUrun= Driver.get().findElement(By.xpath("//a[@class='prodDescription']")).getText();
+        Assert.assertTrue(sepetimUrun.equals(expectedUrun));
 
-        Utils.verfication2("/istek-listelerim");
-
-        String favList = Utils.captureScreenShot();
-        report.createTest("Favori Listesine Ürün Eklenmesi").pass("Ürünün favorilere eklendiği kontrol edildi.").addScreenCaptureFromBase64String(favList);
+        System.out.println("Seçilen " + expectedUrun + "ürününün sepete eklendiği onaylandı.");
+        extentLogger.pass("Ürünün sepette olduğu doğrulandı.");
 
 
-        /** Favorilere eklenmiş olan ürün silinir */
+        /** Sepete eklenmiş olan ürün silinir ve kontrol edilir */
 
-        listPage.listItem.click();
-        Utils.waitFor(1);
-
+        Utils.waitFor(2);
         listPage.deleteItem.click();
         Utils.waitFor(2);
+        listPage.acceptDelete.click();
 
-        String message = Driver.get().findElement(By.xpath("//span[@class='message']")).getText();
-        Assert.assertTrue(message.contains("Ürününüz listeden silindi."));
+        String message = Driver.get().findElement(By.xpath("//h2[@class='title']")).getText();
+        Assert.assertTrue(message.contains("Sepetin Boş Görünüyor"));
 
-        Utils.waitForVisibility(listPage.tamamButton, 10);
-        listPage.tamamButton.click();
-        Utils.waitFor(3);
-
-        String deleteFav = Utils.captureScreenShot();
-        report.createTest("Favorilerden Ürünün Silinmesi").pass("Ürün başarı şekilde favorilerden silindi.").addScreenCaptureFromBase64String(deleteFav);
+        System.out.println("Ürünün silindi ve sepetin boş olduğu onaylandı.");
+        extentLogger.pass("Sepetin boş olduğu doğrulandı.");
 
 
         /** Sitemden başarılı şekilde çıkış yapılır */
 
         WebElement logOut = Driver.get().findElement(By.xpath("//a[@class='logoutBtn']"));
+        WebElement hesabim= Driver.get().findElement(By.xpath("//a[@href='//www.n11.com/hesabim']"));
         actions.moveToElement(hesabim);
         actions.moveToElement(logOut);
         Utils.clickWithJS(logOut);
 
         Utils.waitFor(2);
-        String logout = Utils.captureScreenShot();
-        report.createTest("Siteden Logout Olunması").pass("Siteden başarılı bir şekilde logout olundu.").addScreenCaptureFromBase64String(logout);
 
+        System.out.println("Sistemden çıkış yapıldı.");
+        extentLogger.pass("Sistemden başarılı şekilde çıkış yapıldı.");
 
     }
 
