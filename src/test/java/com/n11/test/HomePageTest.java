@@ -94,6 +94,7 @@ public class HomePageTest extends TestBase {
         String warningTextExpected = "Ürün sepetinize eklendi";
         String warningTextAcutal = Driver.get().findElement(By.xpath("//div[@class='text']")).getText();
         Assert.assertTrue(warningTextAcutal.contains(warningTextExpected));
+        System.out.println(rastGeleSayi+"'inci Ürün sepete başarı ile eklendi.");
         extentLogger.pass(rastGeleSayi+"'inci Ürün sepete başarı ile eklendi.");
 
 
